@@ -34,6 +34,20 @@ public class MainConverter {
 				continue;
 			}
 
+			boolean exist = true;
+			try {
+				Statement statement = connection.createStatement();
+				statement.execute("select count(*) from " + lowercaseTableName);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				exist = false;
+			}
+
+			if (!exist) {
+				System.out.println("Skipping the processing of the table: " + originalTableName + " because it was already imported!");
+				continue;
+			}
+
 			Statement statement = connection.createStatement();
 			int rows = statement.executeUpdate("delete from " + originalTableName);
 
